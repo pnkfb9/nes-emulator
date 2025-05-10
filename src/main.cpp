@@ -1,6 +1,6 @@
 #include "core/log/Logger.h"
-int main(){
-    LOG_INFO("ciao stronzi");
+int main()
+{
+    LOG(INFO, "ciao stronzi");
     return 0;
-    
 }

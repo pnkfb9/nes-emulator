@@ -1,15 +1,24 @@
 cmake_minimum_required(VERSION 3.15)
 project(nes-emulator LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Policy settings
 cmake_policy(SET CMP0077 NEW)
 
 # SDL2 find package
 find_package(SDL2 REQUIRED)
+
+include(FetchContent)
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 9.1.0  # Latest stable release
+)
+FetchContent_MakeAvailable(fmt)
 
 # Catch2 installation
 include(FetchContent)
@@ -24,18 +33,20 @@ FetchContent_MakeAvailable(Catch2)
 add_library(core_objects OBJECT
     src/core/cpu/CPU6502.cpp
     src/core/cpu/CPU6502.h
-    src/core/cpu/RegisterSet.cpp
     src/core/cpu/RegisterSet.h
+    src/core/cpu/InstructionSet.h
     src/core/log/Logger.cpp
     src/core/log/Logger.h
     src/core/mem/Memory.cpp
     src/core/mem/Memory.h
+
 )
 
 # Main include directory for all components
 target_include_directories(core_objects
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        $<BUILD_INTERFACE:${fmt_SOURCE_DIR}/include>  # Add fmt headers
 )
 
 # Main executable
@@ -47,6 +58,7 @@ add_executable(nes-emulator
 target_link_libraries(nes-emulator
     PRIVATE
         core_objects
+        fmt::fmt
         SDL2::SDL2
 )
 
@@ -59,6 +71,7 @@ add_executable(tests
 target_link_libraries(tests
     PRIVATE
         core_objects
+        fmt::fmt
         Catch2::Catch2WithMain
 )
 

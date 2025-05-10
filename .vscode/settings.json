@@ -1,0 +1,42 @@
+{
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.errorSquiggles": "Disabled",
+    
+    "clangd.path": "/opt/homebrew/opt/llvm/bin/clangd",
+    "clangd.detectExtensionConflicts": true,
+    "clangd.checkUpdates": false,  // Prevent auto-update prompts
+    "clangd.arguments": [
+        "--log=verbose",
+        "--pretty",
+        "--background-index",
+        "--compile-commands-dir=${workspaceFolder}/build",
+        "--query-driver=/usr/bin/clang++",
+        "--header-insertion=never",
+        "--all-scopes-completion",
+        "--completion-style=detailed",
+        "--fallback-style=llvm",
+        "--pch-storage=memory"
+    ],
+    
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include",
+        "-I${workspaceFolder}/src",
+        "-I${workspaceFolder}/src/core",
+        "-I${workspaceFolder}/src/core/cpu",
+        "-I${workspaceFolder}/src/core/mem",
+        "-I${workspaceFolder}/build/_deps/fmt-src/include",
+        "-I${workspaceFolder}/build/_deps/catch2-src/single_include",
+        "-std=c++17",
+        "-DCMAKE_BUILD_TYPE=Debug"
+    ],
+    
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+  "clangd.format.enable": true,
+  "clang-format.executable": "/opt/homebrew/opt/llvm/bin/clang-format",
+  "clang-format.style": "file"
+
+
+    
+}
