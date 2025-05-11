@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(nes-emulator LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -37,9 +37,15 @@ add_library(core_objects OBJECT
     src/core/cpu/InstructionSet.h
     src/core/log/Logger.cpp
     src/core/log/Logger.h
-    src/core/mem/Memory.cpp
-    src/core/mem/Memory.h
-
+    src/core/mem/BaseMemory.h
+    src/core/mem/RandomAccessMemory.cpp
+    src/core/mem/RandomAccessMemory.h
+    src/core/mem/ReadOnlyMemory.cpp
+    src/core/mem/ReadOnlyMemory.h
+    src/core/graphics/PictureProcessingUnit.cpp
+    src/core/graphics/PictureProcessingUnit.h
+    src/core/audio/AudioProcessingUnit.cpp
+    src/core/audio/AudioProcessingUnit.h
 )
 
 # Main include directory for all components

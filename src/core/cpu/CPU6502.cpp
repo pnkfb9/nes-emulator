@@ -28,7 +28,7 @@ void CPU6502::interrupt(uint16_t vector)
 
 uint8_t CPU6502::fetch()
 {
-    return m_memory.read(m_registers.PC);
+    //    return m_memory.read(m_registers.PC);
 }
 
 const Instruction CPU6502::decode(uint8_t opcode)

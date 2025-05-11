@@ -4,7 +4,7 @@
 #include <cstdint>
 
 #include "RegisterSet.h"
-#include "core/mem/Memory.h"
+// #include "core/mem/Memory.h"
 
 struct Instruction;
 class CPU6502
@@ -21,7 +21,7 @@ private:
     // Registers
     RegisterSet m_registers;
     // Memory
-    Memory m_memory;
+    // Memory m_memory;
 
     // Helper functions
     uint8_t           fetch();
