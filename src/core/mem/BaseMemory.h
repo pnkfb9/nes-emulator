@@ -14,7 +14,7 @@ public:
     void            clear() { m_memory.fill(0x0U); }
     size_t          size() const { return N; }
 
-private:
+protected:
     std::array<uint8_t, N> m_memory;
 };
 #endif

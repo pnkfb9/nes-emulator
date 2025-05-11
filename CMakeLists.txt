@@ -38,15 +38,17 @@ add_library(core_objects OBJECT
     src/core/log/Logger.cpp
     src/core/log/Logger.h
     src/core/mem/BaseMemory.h
-    src/core/mem/RandomAccessMemory.cpp
-    src/core/mem/RandomAccessMemory.h
-    src/core/mem/ReadOnlyMemory.cpp
-    src/core/mem/ReadOnlyMemory.h
+    src/core/mem/Memory.cpp
+    src/core/mem/Memory.h
+    src/core/mem/Bus.cpp
+    src/core/mem/Bus.h
     src/core/graphics/PictureProcessingUnit.cpp
     src/core/graphics/PictureProcessingUnit.h
     src/core/audio/AudioProcessingUnit.cpp
     src/core/audio/AudioProcessingUnit.h
-)
+    src/Emulator.cpp
+    src/Emulator.h
+    )
 
 # Main include directory for all components
 target_include_directories(core_objects
@@ -57,7 +59,7 @@ target_include_directories(core_objects
 
 # Main executable
 add_executable(nes-emulator
-    src/main.cpp
+    main.cpp
 )
 
 # Link core components and SDL2 to main executable

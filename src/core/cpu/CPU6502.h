@@ -4,13 +4,14 @@
 #include <cstdint>
 
 #include "RegisterSet.h"
-// #include "core/mem/Memory.h"
+
+struct Bus;
 
 struct Instruction;
 class CPU6502
 {
 public:
-    CPU6502();
+    CPU6502(Bus* main_bus);
     ~CPU6502() = default;
 
     void reset();                    // Resets the CPU to its initial state
@@ -20,9 +21,7 @@ public:
 private:
     // Registers
     RegisterSet m_registers;
-    // Memory
-    // Memory m_memory;
-
+    Bus*        main_bus;
     // Helper functions
     uint8_t           fetch();
     const Instruction decode(uint8_t opcode);
