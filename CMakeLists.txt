@@ -37,7 +37,6 @@ add_library(core_objects OBJECT
     src/core/cpu/InstructionSet.h
     src/core/log/Logger.cpp
     src/core/log/Logger.h
-    src/core/mem/BaseMemory.h
     src/core/mem/Memory.cpp
     src/core/mem/Memory.h
     src/core/mem/Bus.cpp

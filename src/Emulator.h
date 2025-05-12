@@ -1,22 +1,23 @@
 #ifndef EMULATOR_H
 #define EMULATOR_H
-#include "core/audio/AudioProcessingUnit.h"
-#include "core/cpu/CPU6502.h"
-#include "core/graphics/PictureProcessingUnit.h"
-#include "core/mem/Bus.h"
-#include "core/mem/Memory.h"
+
+struct CPU6502;
+struct PictureProcessingUnit;
+struct AudioProcessingUnit;
+struct Memory;
+struct Bus;
 class Emulator
 {
 public:
     Emulator();
 
 private:
-    CPU6502               cpu;
-    PictureProcessingUnit ppu;
-    AudioProcessingUnit   apu;
-    Memory<2048>          ram;
-    Memory<524288>        rom;
-    Bus                   main_bus;
+    CPU6502*               m_cpu;
+    PictureProcessingUnit* m_ppu;
+    AudioProcessingUnit*   m_apu;
+    Memory*                m_ram;
+    Memory*                m_rom;
+    Bus*                   m_main_bus;
 };
 
 #endif
