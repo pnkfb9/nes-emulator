@@ -13,19 +13,20 @@ cmake_policy(SET CMP0077 NEW)
 find_package(SDL2 REQUIRED)
 
 include(FetchContent)
+
+# fmt library
 FetchContent_Declare(
     fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_TAG 9.1.0  # Latest stable release
+    GIT_TAG 9.1.0
 )
 FetchContent_MakeAvailable(fmt)
 
-# Catch2 installation
-include(FetchContent)
+# Catch2 for testing
 FetchContent_Declare(
   Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.4.0
+  GIT_TAG v3.4.0
 )
 FetchContent_MakeAvailable(Catch2)
 
@@ -47,21 +48,17 @@ add_library(core_objects OBJECT
     src/core/audio/AudioProcessingUnit.h
     src/Emulator.cpp
     src/Emulator.h
-    )
+)
 
 # Main include directory for all components
 target_include_directories(core_objects
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
-        $<BUILD_INTERFACE:${fmt_SOURCE_DIR}/include>  # Add fmt headers
+        $<BUILD_INTERFACE:${fmt_SOURCE_DIR}/include>
 )
 
 # Main executable
-add_executable(nes-emulator
-    main.cpp
-)
-
-# Link core components and SDL2 to main executable
+add_executable(nes-emulator main.cpp)
 target_link_libraries(nes-emulator
     PRIVATE
         core_objects
@@ -70,11 +67,7 @@ target_link_libraries(nes-emulator
 )
 
 # Test executable
-add_executable(tests
-    tests/cpu_tests.cpp
-)
-
-# Link core components and Catch2 to tests
+add_executable(tests tests/cpu_tests.cpp)
 target_link_libraries(tests
     PRIVATE
         core_objects
@@ -86,69 +79,44 @@ target_link_libraries(tests
 enable_testing()
 add_test(NAME cpu-tests COMMAND tests)
 
-# Compiler options for Debug builds
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    # Common debug flags for all platforms
-    target_compile_options(core_objects PRIVATE
-        -Wall
-        -Wextra
-        -g
-        -O0
-    )
-    
-    target_compile_options(nes-emulator PRIVATE
-        -Wall
-        -Wextra
-        -g
-        -O0
-    )
-    
-    target_compile_options(tests PRIVATE
-        -Wall
-        -Wextra
-        -g
-        -O0
-    )
+# Common debug flags
+set(COMMON_DEBUG_FLAGS -Wall -Wextra -g -O0)
 
-    # Sanitizer configuration
-    if(APPLE)
-        # Apple-specific sanitizer setup (works for both Intel and ARM)
+# Sanitizer configuration function
+function(add_sanitizer_flags target)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+        # Check if sanitizers are supported
+        include(CheckCXXCompilerFlag)
         set(SANITIZER_FLAGS "-fsanitize=address,undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+        check_cxx_compiler_flag("${SANITIZER_FLAGS}" HAVE_SANITIZERS)
         
-        # For Xcode generator, use Xcode-specific settings
-        if(CMAKE_GENERATOR STREQUAL "Xcode")
-            set(CMAKE_XCODE_ATTRIBUTE_ENABLE_ADDRESS_SANITIZER "YES")
-            set(CMAKE_XCODE_ATTRIBUTE_ENABLE_UNDEFINED_BEHAVIOR_SANITIZER "YES")
+        if(HAVE_SANITIZERS)
+            if(APPLE AND CMAKE_GENERATOR STREQUAL "Xcode")
+                # Xcode-specific settings
+                set_property(TARGET ${target} PROPERTY XCODE_ATTRIBUTE_ENABLE_ADDRESS_SANITIZER "YES")
+                set_property(TARGET ${target} PROPERTY XCODE_ATTRIBUTE_ENABLE_UNDEFINED_BEHAVIOR_SANITIZER "YES")
+            else()
+                # Makefile/Ninja generators
+                target_compile_options(${target} PRIVATE ${SANITIZER_FLAGS})
+                target_link_options(${target} PRIVATE ${SANITIZER_FLAGS})
+            endif()
         else()
-            # For Makefile/Ninja generators
-            target_compile_options(core_objects PRIVATE ${SANITIZER_FLAGS})
-            target_link_options(core_objects PRIVATE ${SANITIZER_FLAGS})
-            
-            target_compile_options(nes-emulator PRIVATE ${SANITIZER_FLAGS})
-            target_link_options(nes-emulator PRIVATE ${SANITIZER_FLAGS})
-            
-            target_compile_options(tests PRIVATE ${SANITIZER_FLAGS})
-            target_link_options(tests PRIVATE ${SANITIZER_FLAGS})
+            message(WARNING "Sanitizers not supported for target ${target}")
         endif()
-    else()
-        # Linux/other platforms
-        target_compile_options(core_objects PRIVATE
-            -fsanitize=address,undefined
-            -fno-omit-frame-pointer
-            -fno-optimize-sibling-calls
-        )
-        target_link_options(core_objects PRIVATE -fsanitize=address,undefined)
-        
-        target_compile_options(nes-emulator PRIVATE
-            -fsanitize=address,undefined
-        )
-        target_link_options(nes-emulator PRIVATE -fsanitize=address,undefined)
-        
-        target_compile_options(tests PRIVATE
-            -fsanitize=address,undefined
-        )
-        target_link_options(tests PRIVATE -fsanitize=address,undefined)
     endif()
+endfunction()
+
+# Apply debug options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # Apply common debug flags
+    target_compile_options(core_objects PRIVATE ${COMMON_DEBUG_FLAGS})
+    target_compile_options(nes-emulator PRIVATE ${COMMON_DEBUG_FLAGS})
+    target_compile_options(tests PRIVATE ${COMMON_DEBUG_FLAGS})
+
+    # Apply sanitizers to all targets
+    add_sanitizer_flags(core_objects)
+    add_sanitizer_flags(nes-emulator)
+    add_sanitizer_flags(tests)
 endif()
 
 # Installation (optional)

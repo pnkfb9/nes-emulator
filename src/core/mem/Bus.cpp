@@ -2,9 +2,9 @@
 
 #include "core/log/Logger.h"
 
-Bus::Bus(std::string_view name)
+Bus::Bus(std::string_view name) : name(name)
 {
-    LOG(DEBUG, "[{}] Init");
+    LOG(DEBUG, "[{}] Init", name);
 }
 uint8_t Bus::read(uint16_t addr)
 {

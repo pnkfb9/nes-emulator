@@ -6,19 +6,19 @@
 
 CPU6502::CPU6502(std::string_view name) : name(name)
 {
-    LOG(DEBUG, "[{}] Init", name);
+    LOG(DEBUG, "Init");
     reset();
 }
 
 void CPU6502::reset()
 {
-    LOG(DEBUG, "[{}] Reset", name);
+    LOG(DEBUG, "Reset");
     m_registers.reset();
 }
 
 void CPU6502::step()
 {
-    LOG(DEBUG, "[{}] Step()", name);
+    LOG(DEBUG, "Step()");
     // fetch, decode and execute goes in here
     uint8_t           opcode = fetch();
     const Instruction inst = decode(opcode);
@@ -26,6 +26,7 @@ void CPU6502::step()
 }
 void CPU6502::interrupt(uint16_t vector)
 {
+    (void)vector;
 }
 
 uint8_t CPU6502::fetch()
@@ -40,6 +41,7 @@ const Instruction CPU6502::decode(uint8_t opcode)
 
 void CPU6502::execute(const Instruction& instruction)
 {
+    (void)instruction;
 }
 
 void CPU6502::registerBus(Bus& bus)

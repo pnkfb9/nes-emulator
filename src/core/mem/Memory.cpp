@@ -2,9 +2,9 @@
 
 #include "core/log/Logger.h"
 
-Memory::Memory(std::string_view name, size_t size) : name(name), m_size(size), m_memory(size, 0x0U)
+Memory::Memory(std::string_view name, size_t size) : name(name), m_memory(size, 0x0U), m_size(size)
 {
-    LOG(DEBUG, "[{}] Memory Init", name);
+    LOG(DEBUG, "[{}] Init", name);
     m_memory.reserve(size);
 }
 

@@ -3,7 +3,6 @@
 #include <fmt/format.h>
 
 #include <chrono>
-#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -40,6 +39,11 @@ public:
     // Core logging function
     template <typename... Args>
     void log(Level level, std::string_view module, std::string_view format, Args&&... args);
+    // Set the global minimum log level (logs below this level are ignored)
+    static void setLogLevel(Level level) { getInstance().currentLevel_ = level; }
+
+    // Get the current log level
+    static Level getLogLevel() { return getInstance().currentLevel_; }
 
 private:
     Logger(); // Private constructor
@@ -48,6 +52,7 @@ private:
     std::mutex                                  mutex_;
     std::vector<std::ostream*>                  streams_;
     std::vector<std::unique_ptr<std::ofstream>> fileStreams_;
+    Level currentLevel_ = Level::INFO; // Default: show INFO and above
 };
 
 // --- Helper to extract module name from file path ---
@@ -64,6 +69,11 @@ inline std::string_view extractModuleName(std::string_view filepath)
 template <typename... Args>
 void Logger::log(Level level, std::string_view module, std::string_view format, Args&&... args)
 {
+    // Skip if the message level is too low
+    if (level < currentLevel_)
+    {
+        return;
+    }
     std::lock_guard<std::mutex> lock(mutex_);
 
     const auto         now = std::chrono::system_clock::now();
@@ -77,8 +87,8 @@ void Logger::log(Level level, std::string_view module, std::string_view format, 
     {
         *stream << fmt::format("[{}] [{}] [{}] {}\n",
                                timestamp.str(),
-                               module,
                                levelToString(level),
+                               module,
                                formatted_msg);
     }
 }
