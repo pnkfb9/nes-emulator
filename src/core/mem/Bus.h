@@ -14,7 +14,6 @@ public:
     void    registerDevice(Memory& device, uint16_t start_addr);
 
 private:
-    bool                       check_address(uint16_t address);
     std::string_view           name;
     std::map<unsigned, Memory> devices;
 };

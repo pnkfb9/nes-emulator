@@ -1,11 +1,11 @@
 #ifndef EMULATOR_H
 #define EMULATOR_H
 
-struct CPU6502;
-struct PictureProcessingUnit;
-struct AudioProcessingUnit;
-struct Memory;
-struct Bus;
+class CPU6502;
+class PictureProcessingUnit;
+class AudioProcessingUnit;
+class Memory;
+class Bus;
 class Emulator
 {
 public:

@@ -29,3 +29,8 @@ void Memory::clear()
 {
     m_memory.clear();
 }
+
+unsigned Memory::size()
+{
+    return m_size;
+}

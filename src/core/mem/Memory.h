@@ -7,9 +7,10 @@ class Memory
 public:
     Memory(std::string_view name, size_t size);
     ~Memory();
-    uint8_t read(uint16_t addr);
-    void    write(uint16_t addr, uint8_t data);
-    void    clear();
+    uint8_t  read(uint16_t addr);
+    void     write(uint16_t addr, uint8_t data);
+    void     clear();
+    unsigned size();
 
 private:
     std::string_view     name;
