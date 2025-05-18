@@ -1,19 +1,18 @@
-#ifndef MEMORY_H
-#define MEMORY_H
-#include <string_view>
+#ifndef BASE_MEMORY_H
+#define BASE_MEMORY_H
+
 #include <vector>
-class Memory
+class BaseMemory
 {
 public:
-    Memory(std::string_view name, size_t size);
-    ~Memory();
+    BaseMemory(size_t size);
+    ~BaseMemory();
     uint8_t  read(uint16_t addr);
     void     write(uint16_t addr, uint8_t data);
     void     clear();
     unsigned size();
 
-private:
-    std::string_view     name;
+protected:
     std::vector<uint8_t> m_memory;
     unsigned             m_size;
 };

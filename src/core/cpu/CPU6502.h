@@ -17,13 +17,13 @@ public:
     void reset();                    // Resets the CPU to its initial state
     void step();                     // Executes a single clock cycle
     void interrupt(uint16_t vector); // interrupt handling
-    void registerBus(Bus& bus);
+    void registerBus(std::shared_ptr<Bus> bus);
 
 private:
     std::string_view name;
     // Registers
-    RegisterSet m_registers;
-    Bus         main_bus;
+    RegisterSet          m_registers;
+    std::shared_ptr<Bus> main_bus;
     // Helper functions
     uint8_t           fetch();
     const Instruction decode(uint8_t opcode);

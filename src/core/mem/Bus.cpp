@@ -16,35 +16,37 @@ Bus::Bus(std::string_view name) : name(name)
 
 uint8_t Bus::read(uint16_t addr)
 {
-    bool    done = false;
-    uint8_t res = 0x0U;
     for (auto& device : devices)
     {
-        if (in_range(addr, device.first, device.second.size()))
+        if (in_range(addr, device.first, device.second->size()))
         {
-            res = device.second.read(addr - device.first);
-            done = true;
+            uint16_t base_addr = addr - device.first;
+            if (device.second->address_in_range(base_addr))
+            {
+                return device.second->read(base_addr);
+            }
         }
     }
-    assert(done);
-    return res;
+    throw std::out_of_range("Failed to read at address " + std::to_string(addr));
 }
 void Bus::write(uint16_t addr, uint8_t data)
 {
-    bool done = false;
     for (auto& device : devices)
     {
-        if (in_range(addr, device.first, device.second.size()))
+        if (in_range(addr, device.first, device.second->size()))
         {
-            device.second.write(addr - device.first, data);
-            done = true;
+            uint16_t base_addr = addr - device.first;
+            if (device.second->address_in_range(base_addr))
+            {
+                device.second->write(base_addr, data);
+                return;
+            }
         }
     }
-    assert(done);
+    throw std::out_of_range("Write failed at address " + std::to_string(addr));
 }
-void Bus::registerDevice(Memory& device, uint16_t start_addr)
+void Bus::registerDevice(std::unique_ptr<Peripheral> device, uint16_t start_addr)
 {
     assert(!devices.count(start_addr));
-    auto element = std::make_pair(start_addr, device);
-    devices.insert(element);
+    devices[start_addr] = std::move(device);
 }

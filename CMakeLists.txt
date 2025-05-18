@@ -38,10 +38,16 @@ add_library(core_objects OBJECT
     src/core/cpu/InstructionSet.h
     src/core/log/Logger.cpp
     src/core/log/Logger.h
-    src/core/mem/Memory.cpp
-    src/core/mem/Memory.h
+    src/core/mem/RAM.cpp
+    src/core/mem/RAM.h
+    src/core/mem/ROM.cpp
+    src/core/mem/ROM.h
+    src/core/mem/BaseMemory.cpp
+    src/core/mem/BaseMemory.h
     src/core/mem/Bus.cpp
     src/core/mem/Bus.h
+    src/core/common/Peripheral.cpp
+    src/core/common/Peripheral.h 
     src/core/graphics/PictureProcessingUnit.cpp
     src/core/graphics/PictureProcessingUnit.h
     src/core/audio/AudioProcessingUnit.cpp

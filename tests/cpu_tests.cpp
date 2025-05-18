@@ -1,23 +1,33 @@
 #include <cstdint>
+#include <random>
 
 #include "catch2/catch_test_macros.hpp"
-#include "core/cpu/CPU6502.h"
+#include "core/log/Logger.h"
 #include "core/mem/Bus.h"
-#include "core/mem/Memory.h"
+#include "core/mem/RAM.h"
 
-TEST_CASE("Bus basic read/write", "[sys]")
+TEST_CASE("Bus basic read/write to RAM", "[sys]")
 {
-    Bus    main_bus("main-bus");
-    Memory ram("RAM", 2048);
-    Memory rom("ROM", 40960);
-    main_bus.registerDevice(ram, 0x0);
-    main_bus.registerDevice(rom, 0x4020);
-    uint8_t  data = 0x0U;
-    uint16_t address = 0x0U;
-    data = main_bus.read(address);
-    REQUIRE(data == 0x0U);
-    main_bus.write(address, 0x12U);
-    REQUIRE(main_bus.read(0x0U) == 0x12U);
+    std::random_device rd;
+    unsigned int       seed = rd();
+    LOG(INFO, "Bus basic test on read/write. only RAM, no PPU or APU.");
+    LOG(INFO, "Using seed: {}", seed); // Catch2 will show this if test fails
+    std::mt19937                           gen(seed);
+    std::uniform_int_distribution<uint8_t> dist(0, 255);
+    Bus                                    main_bus("main-bus");
+    RAM                                    ram("RAM", 0x800U);
+    main_bus.registerDevice(std::make_unique<RAM>(ram), 0x0U);
+    uint8_t data = 0x0U;
+
+    for (uint16_t addr = 0x0U; addr < 0x800U; addr++)
+    {
+        data = main_bus.read(addr);
+        REQUIRE(data == 0x0U);
+        uint8_t wr = dist(gen);
+        main_bus.write(addr, wr);
+        data = main_bus.read(addr);
+        REQUIRE(data == wr);
+    }
 }
 
 TEST_CASE("CPU Reset", "[cpu]")

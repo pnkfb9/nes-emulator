@@ -31,7 +31,7 @@ void CPU6502::interrupt(uint16_t vector)
 
 uint8_t CPU6502::fetch()
 {
-    return main_bus.read(m_registers.PC);
+    return main_bus->read(m_registers.PC);
 }
 
 const Instruction CPU6502::decode(uint8_t opcode)
@@ -44,7 +44,7 @@ void CPU6502::execute(const Instruction& instruction)
     (void)instruction;
 }
 
-void CPU6502::registerBus(Bus& bus)
+void CPU6502::registerBus(std::shared_ptr<Bus> bus)
 {
-    main_bus = bus;
+    main_bus = std::move(bus);
 }
