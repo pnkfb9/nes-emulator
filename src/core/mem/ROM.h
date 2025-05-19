@@ -9,6 +9,6 @@ public:
     ~ROM() override = default;
     bool address_in_range(uint16_t addr) const override;
     void write(uint16_t addr, uint8_t data);
-    bool load_from_file(const std::string& path);
+    void load(std::vector<uint8_t> data);
 };
 #endif

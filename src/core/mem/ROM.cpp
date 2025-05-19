@@ -16,7 +16,8 @@ void ROM::write(uint16_t addr, uint8_t data)
     throw std::runtime_error("Attempt to write to ROM!");
 }
 
-bool ROM::load_from_file(const std::string& path)
+void ROM::load(std::vector<uint8_t> data)
 {
-    return true;
+    m_memory.reserve(data.size());
+    m_memory = data;
 }

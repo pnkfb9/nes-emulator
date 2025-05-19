@@ -19,6 +19,7 @@ public:
     PictureProcessingUnit(std::string_view name = "PPU", size_t size = 0x3FFFU);
     ~PictureProcessingUnit() override = default;
     bool address_in_range(uint16_t addr) const override;
+    void load(std::vector<uint8_t> data);
 
 private:
 };

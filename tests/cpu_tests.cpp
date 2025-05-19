@@ -5,6 +5,7 @@
 #include "core/log/Logger.h"
 #include "core/mem/Bus.h"
 #include "core/mem/RAM.h"
+#include "core/utils/RomLoader.h"
 
 TEST_CASE("Bus basic read/write to RAM", "[sys]")
 {
@@ -30,8 +31,17 @@ TEST_CASE("Bus basic read/write to RAM", "[sys]")
     }
 }
 
-TEST_CASE("CPU Reset", "[cpu]")
+TEST_CASE("Basic ROM load", "[rom]")
 {
+    LOG(INFO, "Basic ROM load.");
+    RomLoader             rl;
+    ROM                   rom("ROM", 0x1000U);
+    PictureProcessingUnit ppu;
+    rl.load_from_file(
+        "/Users/panc/development/nes-emulator/roms/nes-test-roms/other/apocalypse.nes",
+        rom,
+        ppu);
+    INesHeader header = rl.getINesHeader();
 }
 
 TEST_CASE("LDA Immediate", "[cpu][instructions]")

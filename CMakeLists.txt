@@ -52,8 +52,11 @@ add_library(core_objects OBJECT
     src/core/graphics/PictureProcessingUnit.h
     src/core/audio/AudioProcessingUnit.cpp
     src/core/audio/AudioProcessingUnit.h
+    src/core/utils/RomLoader.cpp
+    src/core/utils/RomLoader.h
     src/Emulator.cpp
     src/Emulator.h
+
 )
 
 # Main include directory for all components
