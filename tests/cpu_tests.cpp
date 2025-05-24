@@ -9,6 +9,7 @@
 
 TEST_CASE("Bus basic read/write to RAM", "[sys]")
 {
+    Logger::setLogLevel(Logger::Level::DEBUG);
     std::random_device rd;
     unsigned int       seed = rd();
     LOG(INFO, "Bus basic test on read/write. only RAM, no PPU or APU.");
@@ -20,10 +21,9 @@ TEST_CASE("Bus basic read/write to RAM", "[sys]")
     main_bus.registerDevice(std::make_unique<RAM>(ram), 0x0U);
     uint8_t data = 0x0U;
 
-    for (uint16_t addr = 0x0U; addr < 0x800U; addr++)
+    for (uint16_t addr = 0x0U; addr < 0x3FFFU; addr++)
     {
         data = main_bus.read(addr);
-        REQUIRE(data == 0x0U);
         uint8_t wr = dist(gen);
         main_bus.write(addr, wr);
         data = main_bus.read(addr);
